@@ -1,0 +1,112 @@
+type UserStrategy @entity {
+  id: Bytes!
+  user: User!
+  strategy: Strategy!
+  netDeposits: BigInt!
+  yrtBalance: BigInt!
+  reinvestCount: BigInt!
+  depositCount: BigInt!
+  withdrawCount: BigInt!
+  transferInCount: BigInt!
+  transferOutCount: BigInt!
+  reinvests: [Reinvest!] @derivedFrom(field: "userStrategy")
+  deposits: [Deposit!] @derivedFrom(field: "userStrategy")
+  withdraws: [Withdraw!] @derivedFrom(field: "userStrategy")
+  transfersIn: [Transfer!] @derivedFrom(field: "userStrategyTo")
+  transfersOut: [Transfer!] @derivedFrom(field: "userStrategyFrom")
+}
+
+type User @entity {
+  id: Bytes!
+  reinvestCount: BigInt!
+  depositCount: BigInt!
+  withdrawCount: BigInt!
+  transferInCount: BigInt!
+  transferOutCount: BigInt!
+  strategies: [UserStrategy!] @derivedFrom(field: "user")
+  reinvests: [Reinvest!] @derivedFrom(field: "user")
+  deposits: [Deposit!] @derivedFrom(field: "user")
+  withdraws: [Withdraw!] @derivedFrom(field: "user")
+  transfersIn: [Transfer!] @derivedFrom(field: "toUser")
+  transfersOut: [Transfer!] @derivedFrom(field: "fromUser")
+}
+
+type Strategy @entity {
+  id: Bytes!
+  name: String!
+  depositToken: Token!
+  rewardToken: Token!
+  devAddr: Bytes!
+  adminFee: BigInt!
+  devFee: BigInt!
+  reinvestFee: BigInt!
+  depositsEnabled: Boolean
+  reinvestCount: BigInt!
+  depositCount: BigInt!
+  withdrawCount: BigInt!
+  transferCount: BigInt!
+  depositTokenBalance: BigInt!
+  totalSupply: BigInt!
+  reinvests: [Reinvest!] @derivedFrom(field: "strategy")
+  deposits: [Deposit!] @derivedFrom(field: "strategy")
+  withdraws: [Withdraw!] @derivedFrom(field: "strategy")
+  transfers: [Transfer!] @derivedFrom(field: "strategy")
+  users: [UserStrategy!] @derivedFrom(field: "strategy")
+}
+
+type Token @entity {
+  id: Bytes!
+  symbol: String!
+  decimals: BigInt!
+}
+
+type Deposit @entity {
+  id: Bytes!
+  user: User!
+  strategy: Strategy!
+  userStrategy: UserStrategy!
+  amount: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Reinvest @entity {
+  id: Bytes!
+  user: User!
+  strategy: Strategy!
+  userStrategy: UserStrategy!
+  ratio: BigDecimal!
+  reinvestCount: BigInt!
+  newTotalDeposits: BigInt!
+  newTotalSupply: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transferAmountToDevAddr: BigInt!
+}
+
+type Transfer @entity {
+  id: Bytes!
+  strategy: Strategy!
+  fromUser: User
+  toUser: User
+  userStrategyFrom: UserStrategy
+  userStrategyTo: UserStrategy
+  value: BigInt!
+  depositTokenValue: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Withdraw @entity {
+  id: Bytes!
+  user: User!
+  strategy: Strategy!
+  userStrategy: UserStrategy!
+  amount: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

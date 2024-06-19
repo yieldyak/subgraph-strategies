@@ -1,0 +1,80 @@
+specVersion: 1.0.0
+description: Yield Yak Strategies
+{{#graft}}
+features:
+  - grafting
+graft:
+  base: {{graft.base}}
+  block: {{graft.block}}
+{{/graft}}
+indexerHints:
+  prune: never
+schema:
+  file: ./schema.graphql
+dataSources:
+  {{#dataSources}}
+  - kind: ethereum
+    name: {{name}}
+    network: {{network}}
+    source:
+      address: '{{address}}'
+      abi: {{abi}}
+      startBlock: {{startBlock}}
+    context:
+      nativeTokenSymbol:
+        type: String
+        data: {{nativeTokenSymbol}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Strategy
+        - Token
+        - Reinvest
+        - Deposit
+        - Withdraw
+      abis:
+        - name: {{abi}}
+          file: ./abis/{{abi}}.json
+        - name: ERC20SymbolDecimals
+          file: ./abis/ERC20SymbolDecimals.json
+      eventHandlers:
+        {{#isDexStrategyV4}}
+        - event: Deposit(indexed address,uint256)
+          handler: handleDeposit
+        - event: DepositsEnabled(bool)
+          handler: handleDepositsEnabled
+        - event: Reinvest(uint256,uint256)
+          handler: handleReinvest
+          receipt: true
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: UpdateAdminFee(uint256,uint256)
+          handler: handleUpdateAdminFee
+        - event: UpdateDevAddr(address,address)
+          handler: handleUpdateDevAddr
+        - event: UpdateDevFee(uint256,uint256)
+          handler: handleUpdateDevFee
+        - event: UpdateReinvestReward(uint256,uint256)
+          handler: handleUpdateReinvestReward
+        - event: Withdraw(indexed address,uint256)
+          handler: handleWithdraw
+        {{/isDexStrategyV4}}
+        {{^isDexStrategyV4}}
+        - event: Deposit(address,uint256)
+          handler: handleDeposit
+        - event: Reinvest(uint256,uint256)
+          handler: handleReinvest
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: UpdateAdminFee(uint256,uint256)
+          handler: handleUpdateAdminFee
+        - event: UpdateReinvestReward(uint256,uint256)
+          handler: handleUpdateReinvestReward
+        - event: Withdraw(address,uint256)
+          handler: handleWithdraw
+        {{/isDexStrategyV4}}
+      file: ./src/mappings/{{abi}}.ts
+  {{/dataSources}}

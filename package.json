@@ -1,0 +1,26 @@
+{
+  "name": "yieldyak-strategies",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build-and-deploy:avalanche": "yarn mustache:avalanche && yarn build && yarn deploy:avalanche",
+    "build-and-deploy:arbitrum": "yarn mustache:arbitrum && yarn build && yarn deploy:arbitrum",
+    "build-and-deploy:mantle": "yarn mustache:mantle && yarn build && yarn deploy:mantle",
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy:avalanche": "graph deploy --studio yieldyak-strategies-avalanche",
+    "deploy:arbitrum": "graph deploy --studio yieldyak-strategies-arbitrum",
+    "deploy:mantle": "graph deploy yieldyak/yieldyak-strategies-mantle --node https://subgraph-api.mantle.xyz/deploy --ipfs https://subgraph-api.mantle.xyz/ipfs",
+    "mustache:avalanche": "mustache config/avalanche.json subgraph.template.yaml > subgraph.yaml",
+    "mustache:arbitrum": "mustache config/arbitrum.json subgraph.template.yaml > subgraph.yaml",
+    "mustache:mantle": "mustache config/mantle.json subgraph.template.yaml > subgraph.yaml",
+    "create:mantle": "graph create yieldyak/yieldyak-strategies-mantle --node https://subgraph-api.mantle.xyz/deploy"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.73.0",
+    "@graphprotocol/graph-ts": "0.32.0",
+    "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.5.0"
+  }
+}
