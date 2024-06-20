@@ -24,6 +24,16 @@ dataSources:
       nativeTokenSymbol:
         type: String
         data: {{nativeTokenSymbol}}
+      {{#manualDepositTokenSymbol}}
+      manualDepositTokenSymbol:
+        type: String
+        data: {{manualDepositTokenSymbol}}
+      {{/manualDepositTokenSymbol}}
+      {{#manualDepositTokenDecimals}}
+      manualDepositTokenDecimals:
+        type: BigInt
+        data: '{{manualDepositTokenDecimals}}'
+      {{/manualDepositTokenDecimals}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

@@ -244,14 +244,17 @@ function createOrLoadToken(id: Address): Token {
   let token = Token.load(id)
   if (token == null) {
     token = new Token(id)
+    let context = dataSource.context()
     if (id == Address.zero()) {
       token.decimals = BigInt.fromI32(18)
-      let context = dataSource.context()
       token.symbol = context.getString('nativeTokenSymbol')
     } else {
       let tokenContract = ERC20SymbolDecimals.bind(id)
-      token.decimals = BigInt.fromI32(tokenContract.decimals())
-      token.symbol = tokenContract.symbol()
+      // We have a couple of lines here to deal with the situation when calling decimals and symbol on the depositToken fails (e.g. GLP on Avalanche)
+      let decimalsResult = tokenContract.try_decimals()
+      token.decimals = decimalsResult.reverted ? context.getBigInt('manualDepositTokenDecimals') : BigInt.fromI32(decimalsResult.value)
+      let symbolResult = tokenContract.try_symbol()
+      token.symbol = symbolResult.reverted ? context.getString('manualDepositTokenSymbol') : symbolResult.value
     }
   }
   token.save()
