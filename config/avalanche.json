@@ -1,11 +1,39 @@
 {
   "network": "avalanche",
   "graft": {
-    "base": "QmQ46nAG26fNvAd89JXf6hWJvN1eiUoiVw5BHU9F3QWsZ3",
-    "block": 11373768
+    "base": "QmYGwosHHRhQKNVAzmschzgzMujbvWk7zzTs1qoKpSfPgA",
+    "block": 47750431
   },
   "nativeTokenSymbol": "AVAX",
   "dataSources": [
+    {
+      "name": "xCa7667108f99967483cb062614e40BBb3Fe7D068",
+      "address": "0xCa7667108f99967483cb062614e40BBb3Fe7D068",
+      "isDexStrategyV4": true,
+      "abi": "DexStrategyV4",
+      "startBlock": 47751154
+    },
+    {
+      "name": "x4f8Cbde5bDDFc8746fcD57B6410694FEB15A2161",
+      "address": "0x4f8Cbde5bDDFc8746fcD57B6410694FEB15A2161",
+      "isDexStrategyV4": true,
+      "abi": "DexStrategyV4",
+      "startBlock": 47750900
+    },
+    {
+      "name": "x6ACA4256fe3E9cB24F85ef80b503Eb9c9D110514",
+      "address": "0x6ACA4256fe3E9cB24F85ef80b503Eb9c9D110514",
+      "isDexStrategyV4": true,
+      "abi": "DexStrategyV4",
+      "startBlock": 47750781
+    },
+    {
+      "name": "x8Fcce95f517b1992d0ea72b2B05A071327b0E6c7",
+      "address": "0x8Fcce95f517b1992d0ea72b2B05A071327b0E6c7",
+      "isDexStrategyV4": true,
+      "abi": "DexStrategyV4",
+      "startBlock": 47750432
+    },
     {
       "name": "xC099B1664e0b2e3AcC432D321a8043Ca99c5055A",
       "address": "0xC099B1664e0b2e3AcC432D321a8043Ca99c5055A",
