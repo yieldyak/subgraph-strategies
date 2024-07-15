@@ -1,11 +1,18 @@
 {
   "network": "avalanche",
   "graft": {
-    "base": "QmYGwosHHRhQKNVAzmschzgzMujbvWk7zzTs1qoKpSfPgA",
-    "block": 47750431
+    "base": "QmaikzvrgXjuYM5fb5GPcBzkh5p3Yj65a8AAoxSgUod9p6",
+    "block": 47999540
   },
   "nativeTokenSymbol": "AVAX",
   "dataSources": [
+    {
+      "name": "x254fC17A3b515be70A94cdf7E18adc3a3DA1ABa2",
+      "address": "0x254fC17A3b515be70A94cdf7E18adc3a3DA1ABa2",
+      "isDexStrategyV4": true,
+      "abi": "DexStrategyV4",
+      "startBlock": 47999541
+    },
     {
       "name": "xCa7667108f99967483cb062614e40BBb3Fe7D068",
       "address": "0xCa7667108f99967483cb062614e40BBb3Fe7D068",
