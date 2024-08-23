@@ -1,4 +1,4 @@
-import { Address, BigInt, BigDecimal, ethereum, ByteArray, Bytes, dataSource } from "@graphprotocol/graph-ts"
+import { Address, BigInt, BigDecimal, ethereum, Bytes, dataSource } from "@graphprotocol/graph-ts"
 import {
   DexStrategy,
   Deposit as DepositEvent,
@@ -7,10 +7,10 @@ import {
   UpdateAdminFee as UpdateAdminFeeEvent,
   UpdateReinvestReward as UpdateReinvestRewardEvent,
   Withdraw as WithdrawEvent
-} from "../../generated/DexStrategy/DexStrategy"
+} from "../../generated/templates/DexStrategy/DexStrategy"
 import {
   ERC20SymbolDecimals
-} from "../../generated/DexStrategy/ERC20SymbolDecimals"
+} from "../../generated/templates/DexStrategy/ERC20SymbolDecimals"
 import {
   UserStrategy,
   User,
