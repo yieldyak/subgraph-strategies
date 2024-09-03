@@ -106,8 +106,8 @@ export class UserStrategy extends Entity {
     this.set("yrtBalance", Value.fromBigInt(value));
   }
 
-  get reinvestCount(): BigInt {
-    let value = this.get("reinvestCount");
+  get cumulativeDepositsOrTransfersIn(): BigInt {
+    let value = this.get("cumulativeDepositsOrTransfersIn");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -115,8 +115,8 @@ export class UserStrategy extends Entity {
     }
   }
 
-  set reinvestCount(value: BigInt) {
-    this.set("reinvestCount", Value.fromBigInt(value));
+  set cumulativeDepositsOrTransfersIn(value: BigInt) {
+    this.set("cumulativeDepositsOrTransfersIn", Value.fromBigInt(value));
   }
 
   get depositCount(): BigInt {
@@ -132,19 +132,6 @@ export class UserStrategy extends Entity {
     this.set("depositCount", Value.fromBigInt(value));
   }
 
-  get withdrawCount(): BigInt {
-    let value = this.get("withdrawCount");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set withdrawCount(value: BigInt) {
-    this.set("withdrawCount", Value.fromBigInt(value));
-  }
-
   get transferInCount(): BigInt {
     let value = this.get("transferInCount");
     if (!value || value.kind == ValueKind.NULL) {
@@ -156,6 +143,32 @@ export class UserStrategy extends Entity {
 
   set transferInCount(value: BigInt) {
     this.set("transferInCount", Value.fromBigInt(value));
+  }
+
+  get cumulativeWithdrawsOrTransfersOut(): BigInt {
+    let value = this.get("cumulativeWithdrawsOrTransfersOut");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cumulativeWithdrawsOrTransfersOut(value: BigInt) {
+    this.set("cumulativeWithdrawsOrTransfersOut", Value.fromBigInt(value));
+  }
+
+  get withdrawCount(): BigInt {
+    let value = this.get("withdrawCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set withdrawCount(value: BigInt) {
+    this.set("withdrawCount", Value.fromBigInt(value));
   }
 
   get transferOutCount(): BigInt {
@@ -171,12 +184,43 @@ export class UserStrategy extends Entity {
     this.set("transferOutCount", Value.fromBigInt(value));
   }
 
-  get reinvests(): ReinvestLoader {
-    return new ReinvestLoader(
-      "UserStrategy",
-      this.get("id")!.toBytes().toHexString(),
-      "reinvests",
-    );
+  get reinvestCount(): BigInt {
+    let value = this.get("reinvestCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set reinvestCount(value: BigInt) {
+    this.set("reinvestCount", Value.fromBigInt(value));
+  }
+
+  get cumulativeTransferAmountToReinvestAddr(): BigInt {
+    let value = this.get("cumulativeTransferAmountToReinvestAddr");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cumulativeTransferAmountToReinvestAddr(value: BigInt) {
+    this.set("cumulativeTransferAmountToReinvestAddr", Value.fromBigInt(value));
+  }
+
+  get cumulativeReinvestGasCost(): BigInt {
+    let value = this.get("cumulativeReinvestGasCost");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cumulativeReinvestGasCost(value: BigInt) {
+    this.set("cumulativeReinvestGasCost", Value.fromBigInt(value));
   }
 
   get deposits(): DepositLoader {
@@ -208,6 +252,30 @@ export class UserStrategy extends Entity {
       "UserStrategy",
       this.get("id")!.toBytes().toHexString(),
       "transfersOut",
+    );
+  }
+
+  get reinvests(): ReinvestLoader {
+    return new ReinvestLoader(
+      "UserStrategy",
+      this.get("id")!.toBytes().toHexString(),
+      "reinvests",
+    );
+  }
+
+  get allEvents(): DataLoader {
+    return new DataLoader(
+      "UserStrategy",
+      this.get("id")!.toBytes().toHexString(),
+      "allEvents",
+    );
+  }
+
+  get stats(): UserStrategyStatLoader {
+    return new UserStrategyStatLoader(
+      "UserStrategy",
+      this.get("id")!.toBytes().toHexString(),
+      "stats",
     );
   }
 }
@@ -253,19 +321,6 @@ export class User extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get reinvestCount(): BigInt {
-    let value = this.get("reinvestCount");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set reinvestCount(value: BigInt) {
-    this.set("reinvestCount", Value.fromBigInt(value));
-  }
-
   get depositCount(): BigInt {
     let value = this.get("depositCount");
     if (!value || value.kind == ValueKind.NULL) {
@@ -318,19 +373,24 @@ export class User extends Entity {
     this.set("transferOutCount", Value.fromBigInt(value));
   }
 
+  get reinvestCount(): BigInt {
+    let value = this.get("reinvestCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set reinvestCount(value: BigInt) {
+    this.set("reinvestCount", Value.fromBigInt(value));
+  }
+
   get strategies(): UserStrategyLoader {
     return new UserStrategyLoader(
       "User",
       this.get("id")!.toBytes().toHexString(),
       "strategies",
-    );
-  }
-
-  get reinvests(): ReinvestLoader {
-    return new ReinvestLoader(
-      "User",
-      this.get("id")!.toBytes().toHexString(),
-      "reinvests",
     );
   }
 
@@ -363,6 +423,22 @@ export class User extends Entity {
       "User",
       this.get("id")!.toBytes().toHexString(),
       "transfersOut",
+    );
+  }
+
+  get reinvests(): ReinvestLoader {
+    return new ReinvestLoader(
+      "User",
+      this.get("id")!.toBytes().toHexString(),
+      "reinvests",
+    );
+  }
+
+  get allEvents(): DataLoader {
+    return new DataLoader(
+      "User",
+      this.get("id")!.toBytes().toHexString(),
+      "allEvents",
     );
   }
 }
@@ -460,6 +536,19 @@ export class Strategy extends Entity {
     this.set("devAddr", Value.fromBytes(value));
   }
 
+  get feeCollector(): Bytes {
+    let value = this.get("feeCollector");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set feeCollector(value: Bytes) {
+    this.set("feeCollector", Value.fromBytes(value));
+  }
+
   get adminFee(): BigInt {
     let value = this.get("adminFee");
     if (!value || value.kind == ValueKind.NULL) {
@@ -512,58 +601,6 @@ export class Strategy extends Entity {
     this.set("depositsEnabled", Value.fromBoolean(value));
   }
 
-  get reinvestCount(): BigInt {
-    let value = this.get("reinvestCount");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set reinvestCount(value: BigInt) {
-    this.set("reinvestCount", Value.fromBigInt(value));
-  }
-
-  get depositCount(): BigInt {
-    let value = this.get("depositCount");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set depositCount(value: BigInt) {
-    this.set("depositCount", Value.fromBigInt(value));
-  }
-
-  get withdrawCount(): BigInt {
-    let value = this.get("withdrawCount");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set withdrawCount(value: BigInt) {
-    this.set("withdrawCount", Value.fromBigInt(value));
-  }
-
-  get transferCount(): BigInt {
-    let value = this.get("transferCount");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set transferCount(value: BigInt) {
-    this.set("transferCount", Value.fromBigInt(value));
-  }
-
   get depositTokenBalance(): BigInt {
     let value = this.get("depositTokenBalance");
     if (!value || value.kind == ValueKind.NULL) {
@@ -590,12 +627,137 @@ export class Strategy extends Entity {
     this.set("totalSupply", Value.fromBigInt(value));
   }
 
-  get reinvests(): ReinvestLoader {
-    return new ReinvestLoader(
-      "Strategy",
-      this.get("id")!.toBytes().toHexString(),
-      "reinvests",
+  get cumulativeDeposits(): BigInt {
+    let value = this.get("cumulativeDeposits");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cumulativeDeposits(value: BigInt) {
+    this.set("cumulativeDeposits", Value.fromBigInt(value));
+  }
+
+  get depositCount(): BigInt {
+    let value = this.get("depositCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set depositCount(value: BigInt) {
+    this.set("depositCount", Value.fromBigInt(value));
+  }
+
+  get cumulativeWithdraws(): BigInt {
+    let value = this.get("cumulativeWithdraws");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cumulativeWithdraws(value: BigInt) {
+    this.set("cumulativeWithdraws", Value.fromBigInt(value));
+  }
+
+  get withdrawCount(): BigInt {
+    let value = this.get("withdrawCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set withdrawCount(value: BigInt) {
+    this.set("withdrawCount", Value.fromBigInt(value));
+  }
+
+  get cumulativeNetDeposits(): BigInt {
+    let value = this.get("cumulativeNetDeposits");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cumulativeNetDeposits(value: BigInt) {
+    this.set("cumulativeNetDeposits", Value.fromBigInt(value));
+  }
+
+  get transferCount(): BigInt {
+    let value = this.get("transferCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set transferCount(value: BigInt) {
+    this.set("transferCount", Value.fromBigInt(value));
+  }
+
+  get reinvestCount(): BigInt {
+    let value = this.get("reinvestCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set reinvestCount(value: BigInt) {
+    this.set("reinvestCount", Value.fromBigInt(value));
+  }
+
+  get cumulativeTransferAmountToDevAddrOrFeeCollector(): BigInt {
+    let value = this.get("cumulativeTransferAmountToDevAddrOrFeeCollector");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cumulativeTransferAmountToDevAddrOrFeeCollector(value: BigInt) {
+    this.set(
+      "cumulativeTransferAmountToDevAddrOrFeeCollector",
+      Value.fromBigInt(value),
     );
+  }
+
+  get cumulativeTransferAmountToReinvestAddr(): BigInt {
+    let value = this.get("cumulativeTransferAmountToReinvestAddr");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cumulativeTransferAmountToReinvestAddr(value: BigInt) {
+    this.set("cumulativeTransferAmountToReinvestAddr", Value.fromBigInt(value));
+  }
+
+  get cumulativeReinvestGasCost(): BigInt {
+    let value = this.get("cumulativeReinvestGasCost");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cumulativeReinvestGasCost(value: BigInt) {
+    this.set("cumulativeReinvestGasCost", Value.fromBigInt(value));
   }
 
   get deposits(): DepositLoader {
@@ -622,11 +784,35 @@ export class Strategy extends Entity {
     );
   }
 
+  get reinvests(): ReinvestLoader {
+    return new ReinvestLoader(
+      "Strategy",
+      this.get("id")!.toBytes().toHexString(),
+      "reinvests",
+    );
+  }
+
   get users(): UserStrategyLoader {
     return new UserStrategyLoader(
       "Strategy",
       this.get("id")!.toBytes().toHexString(),
       "users",
+    );
+  }
+
+  get allEvents(): DataLoader {
+    return new DataLoader(
+      "Strategy",
+      this.get("id")!.toBytes().toHexString(),
+      "allEvents",
+    );
+  }
+
+  get stats(): StrategyStatLoader {
+    return new StrategyStatLoader(
+      "Strategy",
+      this.get("id")!.toBytes().toHexString(),
+      "stats",
     );
   }
 }
@@ -964,6 +1150,58 @@ export class Reinvest extends Entity {
     this.set("newTotalSupply", Value.fromBigInt(value));
   }
 
+  get transferAmountToDevAddrOrFeeCollector(): BigInt {
+    let value = this.get("transferAmountToDevAddrOrFeeCollector");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set transferAmountToDevAddrOrFeeCollector(value: BigInt) {
+    this.set("transferAmountToDevAddrOrFeeCollector", Value.fromBigInt(value));
+  }
+
+  get transferAmountToReinvestAddr(): BigInt {
+    let value = this.get("transferAmountToReinvestAddr");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set transferAmountToReinvestAddr(value: BigInt) {
+    this.set("transferAmountToReinvestAddr", Value.fromBigInt(value));
+  }
+
+  get gasPrice(): BigInt {
+    let value = this.get("gasPrice");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set gasPrice(value: BigInt) {
+    this.set("gasPrice", Value.fromBigInt(value));
+  }
+
+  get gasUsed(): BigInt {
+    let value = this.get("gasUsed");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set gasUsed(value: BigInt) {
+    this.set("gasUsed", Value.fromBigInt(value));
+  }
+
   get blockNumber(): BigInt {
     let value = this.get("blockNumber");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1001,19 +1239,6 @@ export class Reinvest extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
-  }
-
-  get transferAmountToDevAddr(): BigInt {
-    let value = this.get("transferAmountToDevAddr");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set transferAmountToDevAddr(value: BigInt) {
-    this.set("transferAmountToDevAddr", Value.fromBigInt(value));
   }
 }
 
@@ -1338,21 +1563,303 @@ export class Withdraw extends Entity {
   }
 }
 
-export class ReinvestLoader extends Entity {
-  _entity: string;
-  _field: string;
-  _id: string;
-
-  constructor(entity: string, id: string, field: string) {
+export class Data extends Entity {
+  constructor(id: string) {
     super();
-    this._entity = entity;
-    this._id = id;
-    this._field = field;
+    this.set("id", Value.fromString(id));
   }
 
-  load(): Reinvest[] {
-    let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<Reinvest[]>(value);
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Data entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Data must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("Data", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Data | null {
+    return changetype<Data | null>(store.get_in_block("Data", id));
+  }
+
+  static load(id: string): Data | null {
+    return changetype<Data | null>(store.get("Data", id));
+  }
+
+  get id(): i64 {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI64();
+    }
+  }
+
+  set id(value: i64) {
+    this.set("id", Value.fromI64(value));
+  }
+
+  get timestamp(): i64 {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toTimestamp();
+    }
+  }
+
+  set timestamp(value: i64) {
+    this.set("timestamp", Value.fromTimestamp(value));
+  }
+
+  get user(): Bytes {
+    let value = this.get("user");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
+  }
+
+  get strategy(): Bytes {
+    let value = this.get("strategy");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set strategy(value: Bytes) {
+    this.set("strategy", Value.fromBytes(value));
+  }
+
+  get userStrategy(): Bytes {
+    let value = this.get("userStrategy");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set userStrategy(value: Bytes) {
+    this.set("userStrategy", Value.fromBytes(value));
+  }
+
+  get eventName(): string {
+    let value = this.get("eventName");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set eventName(value: string) {
+    this.set("eventName", Value.fromString(value));
+  }
+
+  get eventNameId(): i64 {
+    let value = this.get("eventNameId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI64();
+    }
+  }
+
+  set eventNameId(value: i64) {
+    this.set("eventNameId", Value.fromI64(value));
+  }
+
+  get depositTokenAmountFromUser(): BigInt {
+    let value = this.get("depositTokenAmountFromUser");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set depositTokenAmountFromUser(value: BigInt) {
+    this.set("depositTokenAmountFromUser", Value.fromBigInt(value));
+  }
+
+  get depositTokenAmountToUser(): BigInt {
+    let value = this.get("depositTokenAmountToUser");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set depositTokenAmountToUser(value: BigInt) {
+    this.set("depositTokenAmountToUser", Value.fromBigInt(value));
+  }
+
+  get yrtAmountFromUser(): BigInt {
+    let value = this.get("yrtAmountFromUser");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set yrtAmountFromUser(value: BigInt) {
+    this.set("yrtAmountFromUser", Value.fromBigInt(value));
+  }
+
+  get yrtAmountToUser(): BigInt {
+    let value = this.get("yrtAmountToUser");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set yrtAmountToUser(value: BigInt) {
+    this.set("yrtAmountToUser", Value.fromBigInt(value));
+  }
+
+  get newTotalDeposits(): BigInt {
+    let value = this.get("newTotalDeposits");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set newTotalDeposits(value: BigInt) {
+    this.set("newTotalDeposits", Value.fromBigInt(value));
+  }
+
+  get newTotalSupply(): BigInt {
+    let value = this.get("newTotalSupply");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set newTotalSupply(value: BigInt) {
+    this.set("newTotalSupply", Value.fromBigInt(value));
+  }
+
+  get transferAmountToDevAddrOrFeeCollector(): BigInt {
+    let value = this.get("transferAmountToDevAddrOrFeeCollector");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set transferAmountToDevAddrOrFeeCollector(value: BigInt) {
+    this.set("transferAmountToDevAddrOrFeeCollector", Value.fromBigInt(value));
+  }
+
+  get transferAmountToReinvestAddr(): BigInt {
+    let value = this.get("transferAmountToReinvestAddr");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set transferAmountToReinvestAddr(value: BigInt) {
+    this.set("transferAmountToReinvestAddr", Value.fromBigInt(value));
+  }
+
+  get reinvestGasPrice(): BigInt {
+    let value = this.get("reinvestGasPrice");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set reinvestGasPrice(value: BigInt) {
+    this.set("reinvestGasPrice", Value.fromBigInt(value));
+  }
+
+  get reinvestGasUsed(): BigInt {
+    let value = this.get("reinvestGasUsed");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set reinvestGasUsed(value: BigInt) {
+    this.set("reinvestGasUsed", Value.fromBigInt(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get logIndex(): BigInt {
+    let value = this.get("logIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set logIndex(value: BigInt) {
+    this.set("logIndex", Value.fromBigInt(value));
   }
 }
 
@@ -1410,6 +1917,60 @@ export class TransferLoader extends Entity {
   }
 }
 
+export class ReinvestLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Reinvest[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Reinvest[]>(value);
+  }
+}
+
+export class DataLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Data[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Data[]>(value);
+  }
+}
+
+export class UserStrategyStatLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): UserStrategyStat[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<UserStrategyStat[]>(value);
+  }
+}
+
 export class UserStrategyLoader extends Entity {
   _entity: string;
   _field: string;
@@ -1425,5 +1986,23 @@ export class UserStrategyLoader extends Entity {
   load(): UserStrategy[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<UserStrategy[]>(value);
+  }
+}
+
+export class StrategyStatLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): StrategyStat[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<StrategyStat[]>(value);
   }
 }

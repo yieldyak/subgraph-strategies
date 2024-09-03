@@ -4,31 +4,38 @@ type UserStrategy @entity {
   strategy: Strategy!
   netDeposits: BigInt!
   yrtBalance: BigInt!
-  reinvestCount: BigInt!
+  cumulativeDepositsOrTransfersIn: BigInt!
   depositCount: BigInt!
-  withdrawCount: BigInt!
   transferInCount: BigInt!
+  cumulativeWithdrawsOrTransfersOut: BigInt!
+  withdrawCount: BigInt!
   transferOutCount: BigInt!
-  reinvests: [Reinvest!] @derivedFrom(field: "userStrategy")
+  reinvestCount: BigInt!
+  cumulativeTransferAmountToReinvestAddr: BigInt!
+  cumulativeReinvestGasCost: BigInt!
   deposits: [Deposit!] @derivedFrom(field: "userStrategy")
   withdraws: [Withdraw!] @derivedFrom(field: "userStrategy")
   transfersIn: [Transfer!] @derivedFrom(field: "userStrategyTo")
   transfersOut: [Transfer!] @derivedFrom(field: "userStrategyFrom")
+  reinvests: [Reinvest!] @derivedFrom(field: "userStrategy")
+  allEvents: [Data!] @derivedFrom(field: "userStrategy")
+  stats: [UserStrategyStat!] @derivedFrom(field: "userStrategy")
 }
 
 type User @entity {
   id: Bytes!
-  reinvestCount: BigInt!
   depositCount: BigInt!
   withdrawCount: BigInt!
   transferInCount: BigInt!
   transferOutCount: BigInt!
+  reinvestCount: BigInt!
   strategies: [UserStrategy!] @derivedFrom(field: "user")
-  reinvests: [Reinvest!] @derivedFrom(field: "user")
   deposits: [Deposit!] @derivedFrom(field: "user")
   withdraws: [Withdraw!] @derivedFrom(field: "user")
   transfersIn: [Transfer!] @derivedFrom(field: "toUser")
   transfersOut: [Transfer!] @derivedFrom(field: "fromUser")
+  reinvests: [Reinvest!] @derivedFrom(field: "user")
+  allEvents: [Data!] @derivedFrom(field: "user")
 }
 
 type Strategy @entity {
@@ -37,21 +44,30 @@ type Strategy @entity {
   depositToken: Token!
   rewardToken: Token!
   devAddr: Bytes!
+  feeCollector: Bytes!
   adminFee: BigInt!
   devFee: BigInt!
   reinvestFee: BigInt!
   depositsEnabled: Boolean
-  reinvestCount: BigInt!
-  depositCount: BigInt!
-  withdrawCount: BigInt!
-  transferCount: BigInt!
   depositTokenBalance: BigInt!
   totalSupply: BigInt!
-  reinvests: [Reinvest!] @derivedFrom(field: "strategy")
+  cumulativeDeposits: BigInt!
+  depositCount: BigInt!
+  cumulativeWithdraws: BigInt!
+  withdrawCount: BigInt!
+  cumulativeNetDeposits: BigInt!
+  transferCount: BigInt!
+  reinvestCount: BigInt!
+  cumulativeTransferAmountToDevAddrOrFeeCollector: BigInt!
+  cumulativeTransferAmountToReinvestAddr: BigInt!
+  cumulativeReinvestGasCost: BigInt!
   deposits: [Deposit!] @derivedFrom(field: "strategy")
   withdraws: [Withdraw!] @derivedFrom(field: "strategy")
   transfers: [Transfer!] @derivedFrom(field: "strategy")
+  reinvests: [Reinvest!] @derivedFrom(field: "strategy")
   users: [UserStrategy!] @derivedFrom(field: "strategy")
+  allEvents: [Data!] @derivedFrom(field: "strategy")
+  stats: [StrategyStat!] @derivedFrom(field: "strategy")
 }
 
 type Token @entity {
@@ -80,10 +96,13 @@ type Reinvest @entity {
   reinvestCount: BigInt!
   newTotalDeposits: BigInt!
   newTotalSupply: BigInt!
+  transferAmountToDevAddrOrFeeCollector: BigInt!
+  transferAmountToReinvestAddr: BigInt!
+  gasPrice: BigInt!
+  gasUsed: BigInt!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-  transferAmountToDevAddr: BigInt!
 }
 
 type Transfer @entity {
@@ -109,4 +128,94 @@ type Withdraw @entity {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type Data @entity(timeseries: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  user: User!
+  strategy: Strategy!
+  userStrategy: UserStrategy!
+  eventName: String!  # Possible events are Deposit, Withdraw, Transfer, Reinvest
+  eventNameId: Int8!  # Id values are 1, 2, 3, 4 for the above eventNames respectively (have to use this for case statements)
+  depositTokenAmountFromUser: BigInt!
+  depositTokenAmountToUser: BigInt!
+  yrtAmountFromUser: BigInt!
+  yrtAmountToUser: BigInt!
+  # We need to include the two metrics below also because we need to keep track of the ratio between them over time
+  newTotalDeposits: BigInt!
+  newTotalSupply: BigInt!
+  # We also need to keep track of a few other reinvest-related metrics even though they will have 0 value for many events
+  transferAmountToDevAddrOrFeeCollector: BigInt!
+  transferAmountToReinvestAddr: BigInt!
+  reinvestGasPrice: BigInt!
+  reinvestGasUsed: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+}
+
+type StrategyStat @aggregation(intervals: ["hour", "day"], source: "Data") {
+  id: Int8!
+  timestamp: Timestamp!
+  strategy: Strategy!
+  # These are the most important fields
+  depositTokenBalance: BigInt! @aggregate(fn: "last", arg: "newTotalDeposits", cumulative: true)
+  totalSupply: BigInt! @aggregate(fn: "last", arg: "newTotalSupply", cumulative: true)
+  # These are good to have but not as important
+  netDeposits: BigInt! @aggregate(fn: "sum", arg: "depositTokenAmountFromUser - depositTokenAmountToUser")
+  cumulativeNetDeposits: BigInt! @aggregate(fn: "sum", arg: "depositTokenAmountFromUser - depositTokenAmountToUser", cumulative: true)
+  deposits: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 1 then depositTokenAmountFromUser else 0 end")
+  cumulativeDeposits: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 1 then depositTokenAmountFromUser else 0 end", cumulative: true)
+  depositCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 1 then 1 else 0 end")
+  cumulativeDepositCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 1 then 1 else 0 end", cumulative: true)
+  withdraws: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 2 then depositTokenAmountToUser else 0 end")
+  cumulativeWithdraws: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 2 then depositTokenAmountToUser else 0 end", cumulative: true)
+  withdrawCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 2 then 1 else 0 end")
+  cumulativeWithdrawCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 2 then 1 else 0 end", cumulative: true)
+  transferCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 3 then 1 else 0 end")
+  cumulativeTransferCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 3 then 1 else 0 end", cumulative: true)
+  reinvestCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 4 then 1 else 0 end")
+  cumulativeReinvestCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 4 then 1 else 0 end", cumulative: true)
+  # These relate only to reinvests but are useful to have
+  transferAmountToDevAddrOrFeeCollector: BigInt! @aggregate(fn: "sum", arg: "transferAmountToDevAddrOrFeeCollector")
+  cumulativeTransferAmountToDevAddrOrFeeCollector: BigInt! @aggregate(fn: "sum", arg: "transferAmountToDevAddrOrFeeCollector", cumulative: true)
+  transferAmountToReinvestAddr: BigInt! @aggregate(fn: "sum", arg: "transferAmountToReinvestAddr")
+  cumulativeTransferAmountToReinvestAddr: BigInt! @aggregate(fn: "sum", arg: "transferAmountToReinvestAddr", cumulative: true)
+  reinvestGasCost: BigInt! @aggregate(fn: "sum", arg: "reinvestGasPrice * reinvestGasUsed")
+  cumulativeReinvestGasCost: BigInt! @aggregate(fn: "sum", arg: "reinvestGasPrice * reinvestGasUsed", cumulative: true)
+}
+
+type UserStrategyStat @aggregation(intervals: ["hour", "day"], source: "Data") {
+  id: Int8!
+  timestamp: Timestamp!
+  userStrategy: UserStrategy!
+  # These are the most important fields
+  cumulativeNetDeposits: BigInt! @aggregate(fn: "sum", arg: "depositTokenAmountFromUser - depositTokenAmountToUser", cumulative: true)
+  yrtBalance: BigInt! @aggregate(fn: "sum", arg: "yrtAmountToUser - yrtAmountFromUser", cumulative: true)
+  # These are good to have but not as important
+  netDeposits: BigInt! @aggregate(fn: "sum", arg: "depositTokenAmountFromUser - depositTokenAmountToUser")
+  yrtBalanceChange: BigInt! @aggregate(fn: "sum", arg: "yrtAmountToUser - yrtAmountFromUser")
+  # Deposits / Transfers In (i.e. recipient of YRT)
+  depositsOrTransfersIn: BigInt! @aggregate(fn: "sum", arg: "depositTokenAmountFromUser")
+  cumulativeDepositsOrTransfersIn: BigInt! @aggregate(fn: "sum", arg: "depositTokenAmountFromUser", cumulative: true)
+  depositCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 1 then 1 else 0 end")
+  cumulativeDepositCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 1 then 1 else 0 end", cumulative: true)
+  transferInCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 3 and yrtAmountToUser > 0 then 1 else 0 end")
+  cumulativeTransferInCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 3 and yrtAmountToUser > 0 then 1 else 0 end", cumulative: true)
+  # Withdraws / Transfers Out (i.e. sender of YRT)
+  withdrawsOrTransfersOut: BigInt! @aggregate(fn: "sum", arg: "depositTokenAmountToUser")
+  cumulativeWithdrawsOrTransfersOut: BigInt! @aggregate(fn: "sum", arg: "depositTokenAmountToUser", cumulative: true)
+  withdrawCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 2 then 1 else 0 end")
+  cumulativeWithdrawCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 2 then 1 else 0 end", cumulative: true)
+  transferOutCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 3 and yrtAmountFromUser > 0 then 1 else 0 end")
+  cumulativeTransferOutCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 3 and yrtAmountFromUser > 0 then 1 else 0 end", cumulative: true)
+  # These relate only to reinvests but are useful to have
+  reinvestCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 4 then 1 else 0 end")
+  cumulativeReinvestCount: BigInt! @aggregate(fn: "sum", arg: "case when eventNameId = 4 then 1 else 0 end", cumulative: true)
+  transferAmountToReinvestAddr: BigInt! @aggregate(fn: "sum", arg: "transferAmountToReinvestAddr")
+  cumulativeTransferAmountToReinvestAddr: BigInt! @aggregate(fn: "sum", arg: "transferAmountToReinvestAddr", cumulative: true)
+  reinvestGasCost: BigInt! @aggregate(fn: "sum", arg: "reinvestGasPrice * reinvestGasUsed")
+  cumulativeReinvestGasCost: BigInt! @aggregate(fn: "sum", arg: "reinvestGasPrice * reinvestGasUsed", cumulative: true)
 }

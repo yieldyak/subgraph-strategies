@@ -27,7 +27,7 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
-      file: ./src/mappings/yak-strategies-setup.ts
+      file: ./src/mappings/yak-strategies-mappings.ts
       entities:
         - Strategy
       abis:
@@ -47,14 +47,17 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
-      file: ./src/mappings/DexStrategyV4.ts
+      file: ./src/mappings/yak-strategies-mappings.ts
       entities:
+        - UserStrategy
         - User
         - Strategy
         - Token
-        - Reinvest
         - Deposit
         - Withdraw
+        - Transfer
+        - Reinvest
+        - Data
       abis:
         - name: DexStrategyV4
           file: ./abis/DexStrategyV4.json
@@ -62,24 +65,26 @@ templates:
           file: ./abis/ERC20SymbolDecimals.json
       eventHandlers:
         - event: Deposit(indexed address,uint256)
-          handler: handleDeposit
+          handler: handleDepositV4
         - event: DepositsEnabled(bool)
-          handler: handleDepositsEnabled
+          handler: handleDepositsEnabledV4
         - event: Reinvest(uint256,uint256)
-          handler: handleReinvest
+          handler: handleReinvestV4
           receipt: true
         - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
+          handler: handleTransferV4
         - event: UpdateAdminFee(uint256,uint256)
-          handler: handleUpdateAdminFee
+          handler: handleUpdateAdminFeeV4
         - event: UpdateDevAddr(address,address)
-          handler: handleUpdateDevAddr
+          handler: handleUpdateDevAddrV4
         - event: UpdateDevFee(uint256,uint256)
-          handler: handleUpdateDevFee
+          handler: handleUpdateDevFeeV4
+        - event: UpdateFeeCollector(address,address)
+          handler: handleUpdateFeeCollectorV4
         - event: UpdateReinvestReward(uint256,uint256)
-          handler: handleUpdateReinvestReward
+          handler: handleUpdateReinvestRewardV4
         - event: Withdraw(indexed address,uint256)
-          handler: handleWithdraw
+          handler: handleWithdrawV4
   - name: DexStrategy
     kind: ethereum
     network: {{network}}
@@ -89,14 +94,17 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
-      file: ./src/mappings/DexStrategy.ts
+      file: ./src/mappings/yak-strategies-mappings.ts
       entities:
+        - UserStrategy
         - User
         - Strategy
         - Token
-        - Reinvest
         - Deposit
         - Withdraw
+        - Transfer
+        - Reinvest
+        - Data
       abis:
         - name: DexStrategy
           file: ./abis/DexStrategy.json
@@ -107,6 +115,7 @@ templates:
           handler: handleDeposit
         - event: Reinvest(uint256,uint256)
           handler: handleReinvest
+          receipt: true
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
         - event: UpdateAdminFee(uint256,uint256)
