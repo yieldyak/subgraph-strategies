@@ -156,7 +156,7 @@ type Data @entity(timeseries: true) {
   logIndex: BigInt!
 }
 
-type StrategyStat @aggregation(intervals: ["hour", "day"], source: "Data") {
+type StrategyStat @aggregation(intervals: ["day"], source: "Data") {
   id: Int8!
   timestamp: Timestamp!
   strategy: Strategy!
@@ -187,7 +187,7 @@ type StrategyStat @aggregation(intervals: ["hour", "day"], source: "Data") {
   cumulativeReinvestGasCost: BigInt! @aggregate(fn: "sum", arg: "reinvestGasPrice * reinvestGasUsed", cumulative: true)
 }
 
-type UserStrategyStat @aggregation(intervals: ["hour", "day"], source: "Data") {
+type UserStrategyStat @aggregation(intervals: ["day"], source: "Data") {
   id: Int8!
   timestamp: Timestamp!
   userStrategy: UserStrategy!
