@@ -3,6 +3,7 @@ build/
 generated
 subgraph.yaml
 yarn.lock
+src/yakstrategies.ts
 
 # Dependency directories
 node_modules/

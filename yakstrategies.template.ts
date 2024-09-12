@@ -34,7 +34,7 @@ export const yakStrategies: YakStrategy[] = [
   {{#strategies}}
   new YakStrategy(
     "{{address}}",
-    {{startBlock}}{{#manualDepositTokenSymbol}},
+    BigInt.fromI32({{startBlock}}){{#manualDepositTokenSymbol}},
     "{{manualDepositTokenSymbol}}",
     {{manualDepositTokenDecimals}}{{/manualDepositTokenSymbol}}
   ){{^last}},{{/last}}
