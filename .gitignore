@@ -1,8 +1,9 @@
 # Graph CLI generated artifacts
 build/
-# generated/ # Removed this as we are using only a couple of generated file and avoiding regenerating those when deploying
+generated
 subgraph.yaml
 yarn.lock
+src/yakstrategies.ts
 
 # Dependency directories
 node_modules/

@@ -1,4 +1,4 @@
-specVersion: 1.0.0
+specVersion: 1.1.0
 description: Yield Yak Strategies
 {{#graft}}
 features:
@@ -12,71 +12,110 @@ indexerHints:
 schema:
   file: ./schema.graphql
 dataSources:
-  {{#dataSources}}
   - kind: ethereum
-    name: {{name}}
+    name: YakStrategies
     network: {{network}}
     source:
-      address: '{{address}}'
-      abi: {{abi}}
+      address: '0x59414b3089ce2AF0010e7523Dea7E2b35d776ec7'  # Also arbitrary / meaningless but subgraph does not deploy without an address
+      abi: ERC20SymbolDecimals  # Arbitrarily chosen as not using event handlers, but need something for codegen to work
       startBlock: {{startBlock}}
     context:
       nativeTokenSymbol:
         type: String
         data: {{nativeTokenSymbol}}
-      {{#manualDepositTokenSymbol}}
-      manualDepositTokenSymbol:
-        type: String
-        data: {{manualDepositTokenSymbol}}
-      {{/manualDepositTokenSymbol}}
-      {{#manualDepositTokenDecimals}}
-      manualDepositTokenDecimals:
-        type: BigInt
-        data: '{{manualDepositTokenDecimals}}'
-      {{/manualDepositTokenDecimals}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
+      file: ./src/mappings/yak-strategies-mappings.ts
       entities:
+        - Strategy
+      abis:
+        - name: ERC20SymbolDecimals
+          file: ./abis/ERC20SymbolDecimals.json
+      blockHandlers:
+        - handler: handleOnce
+          filter:
+            kind: once
+templates:
+  - name: DexStrategyV4
+    kind: ethereum
+    network: {{network}}
+    source:
+      abi: DexStrategyV4
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/mappings/yak-strategies-mappings.ts
+      entities:
+        - UserStrategy
         - User
         - Strategy
         - Token
-        - Reinvest
         - Deposit
         - Withdraw
+        - Transfer
+        - Reinvest
+        - Data
       abis:
-        - name: {{abi}}
-          file: ./abis/{{abi}}.json
+        - name: DexStrategyV4
+          file: ./abis/DexStrategyV4.json
         - name: ERC20SymbolDecimals
           file: ./abis/ERC20SymbolDecimals.json
       eventHandlers:
-        {{#isDexStrategyV4}}
         - event: Deposit(indexed address,uint256)
-          handler: handleDeposit
+          handler: handleDepositV4
         - event: DepositsEnabled(bool)
-          handler: handleDepositsEnabled
+          handler: handleDepositsEnabledV4
         - event: Reinvest(uint256,uint256)
-          handler: handleReinvest
+          handler: handleReinvestV4
           receipt: true
         - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
+          handler: handleTransferV4
         - event: UpdateAdminFee(uint256,uint256)
-          handler: handleUpdateAdminFee
+          handler: handleUpdateAdminFeeV4
         - event: UpdateDevAddr(address,address)
-          handler: handleUpdateDevAddr
+          handler: handleUpdateDevAddrV4
         - event: UpdateDevFee(uint256,uint256)
-          handler: handleUpdateDevFee
+          handler: handleUpdateDevFeeV4
+        - event: UpdateFeeCollector(address,address)
+          handler: handleUpdateFeeCollectorV4
         - event: UpdateReinvestReward(uint256,uint256)
-          handler: handleUpdateReinvestReward
+          handler: handleUpdateReinvestRewardV4
         - event: Withdraw(indexed address,uint256)
-          handler: handleWithdraw
-        {{/isDexStrategyV4}}
-        {{^isDexStrategyV4}}
+          handler: handleWithdrawV4
+  - name: DexStrategy
+    kind: ethereum
+    network: {{network}}
+    source:
+      abi: DexStrategy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/mappings/yak-strategies-mappings.ts
+      entities:
+        - UserStrategy
+        - User
+        - Strategy
+        - Token
+        - Deposit
+        - Withdraw
+        - Transfer
+        - Reinvest
+        - Data
+      abis:
+        - name: DexStrategy
+          file: ./abis/DexStrategy.json
+        - name: ERC20SymbolDecimals
+          file: ./abis/ERC20SymbolDecimals.json
+      eventHandlers:
         - event: Deposit(address,uint256)
           handler: handleDeposit
         - event: Reinvest(uint256,uint256)
           handler: handleReinvest
+          receipt: true
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
         - event: UpdateAdminFee(uint256,uint256)
@@ -85,6 +124,3 @@ dataSources:
           handler: handleUpdateReinvestReward
         - event: Withdraw(address,uint256)
           handler: handleWithdraw
-        {{/isDexStrategyV4}}
-      file: ./src/mappings/{{abi}}.ts
-  {{/dataSources}}
