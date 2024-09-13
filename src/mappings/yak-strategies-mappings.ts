@@ -59,7 +59,7 @@ export function handleOnce(block: ethereum.Block): void {
     let newContext = new DataSourceContext()
     newContext.setString('nativeTokenSymbol', context.getString('nativeTokenSymbol'))
     if (manualDepositTokenDecimals > 0) {
-      newContext.setI32('manualDepositTokenDecimals', manualDepositTokenDecimals)
+      newContext.setBigInt('manualDepositTokenDecimals', BigInt.fromI32(manualDepositTokenDecimals))
     }
     if (manualDepositTokenSymbol) {
       newContext.setString('manualDepositTokenSymbol', manualDepositTokenSymbol)
@@ -74,7 +74,7 @@ export function handleOnce(block: ethereum.Block): void {
     let newContext = new DataSourceContext()
     newContext.setString('nativeTokenSymbol', context.getString('nativeTokenSymbol'))
     if (manualDepositTokenDecimals > 0) {
-      newContext.setI32('manualDepositTokenDecimals', manualDepositTokenDecimals)
+      newContext.setBigInt('manualDepositTokenDecimals', BigInt.fromI32(manualDepositTokenDecimals))
     }
     if (manualDepositTokenSymbol) {
       newContext.setString('manualDepositTokenSymbol', manualDepositTokenSymbol)
