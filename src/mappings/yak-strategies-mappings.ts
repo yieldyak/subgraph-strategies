@@ -59,7 +59,7 @@ export function handleOnce(block: ethereum.Block): void {
     let newContext = new DataSourceContext()
     newContext.setString('nativeTokenSymbol', context.getString('nativeTokenSymbol'))
     if (manualDepositTokenDecimals > 0) {
-      newContext.setBigInt('manualDepositTokenDecimals', BigInt.fromI32(manualDepositTokenDecimals))
+      newContext.setI32('manualDepositTokenDecimals', manualDepositTokenDecimals)
     }
     if (manualDepositTokenSymbol) {
       newContext.setString('manualDepositTokenSymbol', manualDepositTokenSymbol)
@@ -74,7 +74,7 @@ export function handleOnce(block: ethereum.Block): void {
     let newContext = new DataSourceContext()
     newContext.setString('nativeTokenSymbol', context.getString('nativeTokenSymbol'))
     if (manualDepositTokenDecimals > 0) {
-      newContext.setBigInt('manualDepositTokenDecimals', BigInt.fromI32(manualDepositTokenDecimals))
+      newContext.setI32('manualDepositTokenDecimals', manualDepositTokenDecimals)
     }
     if (manualDepositTokenSymbol) {
       newContext.setString('manualDepositTokenSymbol', manualDepositTokenSymbol)
@@ -514,7 +514,7 @@ function createOrLoadToken(id: Address): Token {
       let tokenContract = ERC20SymbolDecimals.bind(id)
       // We have a couple of lines here to deal with the situation when calling decimals and symbol on the depositToken fails (e.g. GLP on Avalanche)
       let decimalsResult = tokenContract.try_decimals()
-      token.decimals = decimalsResult.reverted ? context.getBigInt('manualDepositTokenDecimals') : BigInt.fromI32(decimalsResult.value)
+      token.decimals = decimalsResult.reverted ? BigInt.fromI32(context.getI32('manualDepositTokenDecimals')) : BigInt.fromI32(decimalsResult.value)
       let symbolResult = tokenContract.try_symbol()
       token.symbol = symbolResult.reverted ? context.getString('manualDepositTokenSymbol') : symbolResult.value
     }
