@@ -2,7 +2,8 @@
   "network": "arbitrum-one",
   "graft": {
     "base": "Qmb4Lmh9Xq7Rgq8wTNPxUdKTRv1avL6pjHnZYkTjiD8KXk",
-    "block": 253000000
+    "block": 253000000,
+    "blockPlusOne": 253000001
   },
   "nativeTokenSymbol": "ETH",
   "startBlock": 92197029,

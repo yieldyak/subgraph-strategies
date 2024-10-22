@@ -2,7 +2,8 @@
   "network": "mantle",
   "graft": {
     "base": "Qmexx1Te9c564EEXDJPSX1SEYe8KtnQt83MLfDsKytruCY",
-    "block": 69000000
+    "block": 69000000,
+    "blockPlusOne": 69000001
   },
   "nativeTokenSymbol": "MNT",
   "startBlock": 42236279,

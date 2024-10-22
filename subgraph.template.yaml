@@ -18,7 +18,12 @@ dataSources:
     source:
       address: '0x59414b3089ce2AF0010e7523Dea7E2b35d776ec7'  # Also arbitrary / meaningless but subgraph does not deploy without an address
       abi: ERC20SymbolDecimals  # Arbitrarily chosen as not using event handlers, but need something for codegen to work
+      {{#graft}}
+      startBlock: {{graft.blockPlusOne}}  {{! Use this when doing grafting so that handleOnce is run again and new templates are created}}
+      {{/graft}}
+      {{^graft}}
       startBlock: {{startBlock}}
+      {{/graft}}
     context:
       nativeTokenSymbol:
         type: String
