@@ -1,13 +1,81 @@
 {
   "network": "avalanche",
   "graft": {
-    "base": "Qmbn6rfFjRKB7KcPJK2H5tfRZo3zhfoUX1u6xUe9dqwXC7",
-    "block": 58850426,
-    "blockPlusOne": 58850427
+    "base": "Qma2ow9eLZ8uPgk4p4VixLWRvyZFkJkix9Uz5vHrvcRCY3",
+    "block": 65657205,
+    "blockPlusOne": 65657206
   },
   "nativeTokenSymbol": "AVAX",
   "startBlock": 469747,
   "strategiesV4": [
+    {
+      "address": "0xb667936025ee545e274a2e886e383acf149ad482",
+      "startBlock": 65663580
+    },
+    {
+      "address": "0xb96066acff8e25127105aa179a4ead7173b29241",
+      "startBlock": 65662972
+    },
+    {
+      "address": "0xc9bf668dcefa595692205c78d300397260a583b7",
+      "startBlock": 65662719
+    },
+    {
+      "address": "0xc528dbea79034cef63d5ec55c62a190506050d29",
+      "startBlock": 65662708
+    },
+    {
+      "address": "0xf8cfec214f1ae71c8ae697dbcb263082d81f817e",
+      "startBlock": 65661283
+    },
+    {
+      "address": "0xada36cccf48c0f3d3f0804e39b15ed221d8bacad",
+      "startBlock": 65661207
+    },
+    {
+      "address": "0x7812fc3dd616213d7f3ec3c23ab40d23166f3025",
+      "startBlock": 65661151
+    },
+    {
+      "address": "0x0e4f9deef1c7be37f425fccdab9f6cb3a2bfa89a",
+      "startBlock": 65660559
+    },
+    {
+      "address": "0x58f21b41b07e615957b209dfe887d4d6699a3800",
+      "startBlock": 65660528
+    },
+    {
+      "address": "0x3bc36a0ea51b95597174bce8b05025d1a5c0df9e",
+      "startBlock": 65660497
+    },
+    {
+      "address": "0xea0ccd454d9ba29acc7ecbec3459d1c366d11342",
+      "startBlock": 65659749
+    },
+    {
+      "address": "0x38b50f3194055fa2b010f15c22a99e113d805996",
+      "startBlock": 65659574
+    },
+    {
+      "address": "0xa8d5000484f31e85735e9813712625d6b0cfd3c6",
+      "startBlock": 65659476
+    },
+    {
+      "address": "0x3bbae5dcb89a9fd650281e2609acae9055fae491",
+      "startBlock": 65658903
+    },
+    {
+      "address": "0x7ff774af8c9bf8cf43a0d92e6a052f17e5f604db",
+      "startBlock": 65658733
+    },
+    {
+      "address": "0xa0b7996b22b37c5bbffcaaf56e60dc4e9df2b7eb",
+      "startBlock": 65658543
+    },
+    {
+      "address": "0x5f75b397c63efa31302aa7fa155ddec4f1253437",
+      "startBlock": 65657206
+    },
     {
       "address": "0x36BD072dAb0D2Efb960b7c3E3D1E6E67b3b9F383",
       "startBlock": 58850427

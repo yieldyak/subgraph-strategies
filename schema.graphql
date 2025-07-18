@@ -1,4 +1,4 @@
-type UserStrategy @entity {
+type UserStrategy @entity(immutable: false) {
   id: Bytes!
   user: User!
   strategy: Strategy!
@@ -22,7 +22,7 @@ type UserStrategy @entity {
   stats: [UserStrategyStat!] @derivedFrom(field: "userStrategy")
 }
 
-type User @entity {
+type User @entity(immutable: false) {
   id: Bytes!
   depositCount: BigInt!
   withdrawCount: BigInt!
@@ -38,7 +38,7 @@ type User @entity {
   allEvents: [Data!] @derivedFrom(field: "user")
 }
 
-type Strategy @entity {
+type Strategy @entity(immutable: false) {
   id: Bytes!
   name: String!
   depositToken: Token!
@@ -70,13 +70,13 @@ type Strategy @entity {
   stats: [StrategyStat!] @derivedFrom(field: "strategy")
 }
 
-type Token @entity {
+type Token @entity(immutable: true) {
   id: Bytes!
   symbol: String!
   decimals: BigInt!
 }
 
-type Deposit @entity {
+type Deposit @entity(immutable: true) {
   id: Bytes!
   user: User!
   strategy: Strategy!
@@ -87,7 +87,7 @@ type Deposit @entity {
   transactionHash: Bytes!
 }
 
-type Reinvest @entity {
+type Reinvest @entity(immutable: true) {
   id: Bytes!
   user: User!
   strategy: Strategy!
@@ -105,7 +105,7 @@ type Reinvest @entity {
   transactionHash: Bytes!
 }
 
-type Transfer @entity {
+type Transfer @entity(immutable: true) {
   id: Bytes!
   strategy: Strategy!
   fromUser: User
@@ -119,7 +119,7 @@ type Transfer @entity {
   transactionHash: Bytes!
 }
 
-type Withdraw @entity {
+type Withdraw @entity(immutable: true) {
   id: Bytes!
   user: User!
   strategy: Strategy!
