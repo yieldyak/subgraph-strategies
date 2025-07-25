@@ -70,7 +70,7 @@ type Strategy @entity(immutable: false) {
   stats: [StrategyStat!] @derivedFrom(field: "strategy")
 }
 
-type Token @entity(immutable: true) {
+type Token @entity(immutable: false) {
   id: Bytes!
   symbol: String!
   decimals: BigInt!
