@@ -1,10 +1,5 @@
 {
   "network": "avalanche",
-  "graft": {
-    "base": "QmNUi3ZAnQFXcZFUGzKDpGdSzKFndcKkcwCxk9NKmVjsEf",
-    "block": 66014747,
-    "blockPlusOne": 66014748
-  },
   "nativeTokenSymbol": "AVAX",
   "startBlock": 469747,
   "strategiesV4": [
