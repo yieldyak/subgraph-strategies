@@ -9,6 +9,7 @@ import {
   Bytes,
   BigInt,
   BigDecimal,
+  Int8,
 } from "@graphprotocol/graph-ts";
 
 export class UserStrategy extends Entity {
@@ -1564,9 +1565,9 @@ export class Withdraw extends Entity {
 }
 
 export class Data extends Entity {
-  constructor(id: string) {
+  constructor(id: Int8) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromI64(id));
   }
 
   save(): void {
@@ -1574,19 +1575,19 @@ export class Data extends Entity {
     assert(id != null, "Cannot save Data entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Data must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.INT8,
+        `Entities of type Data must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("Data", id.toString(), this);
+      store.set("Data", id.toI64().toString(), this);
     }
   }
 
-  static loadInBlock(id: string): Data | null {
-    return changetype<Data | null>(store.get_in_block("Data", id));
+  static loadInBlock(id: Int8): Data | null {
+    return changetype<Data | null>(store.get_in_block("Data", id.toString()));
   }
 
-  static load(id: string): Data | null {
-    return changetype<Data | null>(store.get("Data", id));
+  static load(id: Int8): Data | null {
+    return changetype<Data | null>(store.get("Data", id.toString()));
   }
 
   get id(): i64 {

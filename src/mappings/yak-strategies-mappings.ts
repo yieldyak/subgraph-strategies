@@ -561,7 +561,7 @@ function createOrLoadUserStrategy(userId: Bytes, strategyId: Bytes): UserStrateg
 }
 
 function createNewData(event: ethereum.Event, userId: Bytes, eventName: string, eventNameId: Int8): Data {
-  let data = new Data("auto")
+  let data = new Data(1) // ID is set by the indexer
   data.user = userId
   data.strategy = createOrLoadStrategy(event).id
   data.userStrategy = createOrLoadUserStrategy(userId, event.address).id
