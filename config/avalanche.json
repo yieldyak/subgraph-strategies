@@ -1,13 +1,33 @@
 {
   "network": "avalanche",
   "graft": {
-    "base": "QmVztjfaQi2hrDGqxFc2XSbyc4UeysPWUZM5UietvAUgXi",
-    "block": 67006809,
-    "blockPlusOne": 67006810
+    "base": "QmakVQpCyyPmiFJhJ7bzbcuf1zcpH9Zc5rSx1RfvkLKH6X",
+    "block": 67056674,
+    "blockPlusOne": 67056675
   },
   "nativeTokenSymbol": "AVAX",
   "startBlock": 469747,
   "strategiesV4": [
+    {
+      "address": "0xedb267c865dcaf4c84dc9797d87841c7994c56c3",
+      "startBlock": 67063128
+    },
+    {
+      "address": "0xa369fa24c4fff56b92d729aa024d728f05cf76a8",
+      "startBlock": 67062115
+    },
+    {
+      "address": "0x5ddbce2640b4422795996315bf3ae5ad4ac12f2a",
+      "startBlock": 67061872
+    },
+    {
+      "address": "0xa1b4f0a19e0e5c69fcebe9610885f5767ea4f00b",
+      "startBlock": 67058800
+    },
+    {
+      "address": "0x2920a9e238af2f0af90c52516e2cec4ccfa8c41d",
+      "startBlock": 67056675
+    },
     {
       "address": "0x5fdab5c59529a7fd091ecca3dc74a91abc358eec",
       "startBlock": 67006810
